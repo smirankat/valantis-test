@@ -51,10 +51,16 @@ function App() {
     "X-Auth": authString,
   };
 
-  const removeDuplicates = (ids) =>
-    ids?.filter((number, index, numbers) => {
+  const removeDuplicates = (ids) => {
+    return ids.filter((number, index, numbers) => {
       return numbers.indexOf(number) === index;
     });
+  };
+  const removeItemDuplicates = (ids) => {
+    return ids.filter(
+      (value, index, self) => index === self.findIndex((t) => t.id === value.id)
+    );
+  };
 
   let filteredProducts = [];
   let filteredPrices = [];
@@ -74,7 +80,7 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => json.result)
-      .then(removeDuplicates())
+      .then((ids) => removeDuplicates(ids))
       .then((products) => {
         filteredProducts = products;
         filteredArray = [...filteredArray, ...products];
@@ -92,7 +98,7 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => json.result)
-      .then(removeDuplicates())
+      .then((ids) => removeDuplicates(ids))
       .then((prices) => {
         filteredPrices = prices;
         filteredArray = [...filteredArray, ...prices];
@@ -109,7 +115,7 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => json.result)
-      .then(removeDuplicates())
+      .then((ids) => removeDuplicates(ids))
       .then((brands) => {
         filteredBrands = brands;
         filteredArray = [...filteredArray, ...brands];
@@ -184,8 +190,9 @@ function App() {
       }),
     })
       .then((res) => res.json())
+      .then((ids) => removeItemDuplicates(ids.result))
       .then((items) => {
-        setData(items.result);
+        setData(items);
         setLoading(false);
       });
   };
@@ -205,7 +212,7 @@ function App() {
           })
             .then((res) => res.json())
             .then((json) => json.result)
-            .then(removeDuplicates())
+            .then((ids) => removeDuplicates(ids))
       ).then((idsArray) => {
         return fetchItems(idsArray).catch((error) => {
           console.error(error);
@@ -219,7 +226,6 @@ function App() {
     });
   }, [submittedForm, offset]);
 
-  // console.log(data.length);
   return (
     <div className="App">
       <h1>Ювелирные изделия</h1>
