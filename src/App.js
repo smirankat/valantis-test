@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CryptoJS from "crypto-js";
 import "./App.css";
+import image from "./img/gold.png";
 
 function App() {
   const password = "Valantis";
@@ -44,7 +45,7 @@ function App() {
     setStart(start + 50);
   };
 
-  const url = "http://api.valantis.store:40000/";
+  const url = "https://api.valantis.store:41000/";
   const headers = {
     "Content-Type": "application/json",
     "X-Auth": authString,
@@ -243,7 +244,7 @@ function App() {
         ) : (
           data?.map((item, index) => (
             <div className="item" key={index}>
-              <img src="./img/gold.png" alt="img"></img>
+              <img src={image} alt="img"></img>
               <div>
                 <span>Id:</span>
                 {item.id}
